@@ -6,48 +6,51 @@ struct Pane {
     title: String,
 }
 
+#[derive(Default)]
 struct MyBehavior;
 
 impl Behavior<Pane> for MyBehavior {
+    fn pane_ui(&mut self, ui: &mut egui::Ui, _id: TileId, pane: &mut Pane) -> UiResponse {
+        ui.heading(&pane.title);
+        UiResponse::None
+    }
+
     fn tab_title_for_pane(&mut self, pane: &Pane) -> egui::WidgetText {
         pane.title.clone().into()
-    }
-    fn pane_ui(&mut self, ui: &mut egui::Ui, _id: TileId, pane: &mut Pane) -> UiResponse {
-        ui.label(format!("Content of '{}'", pane.title));
-        UiResponse::None
     }
 }
 
 struct App {
     tree: Tree<Pane>,
+    behavior: MyBehavior,
 }
 
 impl App {
     fn new() -> Self {
         let mut tiles = Tiles::default();
 
-        // 3 panneaux simples
-        let a = tiles.insert_pane(Pane { title: "A left".into() });
-        let b = tiles.insert_pane(Pane { title: "B right-top".into() });
-        let c = tiles.insert_pane(Pane { title: "C right-bottom".into() });
+        let h_left  = tiles.insert_pane(Pane { title: "H: Left".into() });
+        let h_right = tiles.insert_pane(Pane { title: "H: Right".into() });
+        let horizontal = tiles.insert_horizontal_tile(vec![h_left, h_right]);
 
-        // Split vertical à droite [B ; C]
-        let right_v = tiles.insert_vertical_tile(vec![b, c]);
+        let v_top    = tiles.insert_pane(Pane { title: "V: Top".into() });
+        let v_middle = tiles.insert_pane(Pane { title: "V: Middle".into() });
+        let v_bottom = tiles.insert_pane(Pane { title: "V: Bottom".into() });
+        let vertical = tiles.insert_vertical_tile(vec![v_top, v_middle, v_bottom]);
 
-        // Split horizontal: [A | right_v]
-        let root = tiles.insert_horizontal_tile(vec![a, right_v]);
+        let root_tabs = tiles.insert_tab_tile(vec![horizontal, vertical]);
 
-        // Crée l'arbre
-        let tree = Tree::new("tiles_demo", root, tiles);
-        Self { tree }
+        let tree = Tree::new("tabs_linear_demo", root_tabs, tiles);
+        let behavior = MyBehavior::default();
+
+        Self { tree, behavior }
     }
 }
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            let mut behavior = MyBehavior;
-            self.tree.ui(&mut behavior, ui);
+            self.tree.ui(&mut self.behavior, ui);
         });
     }
 }
@@ -55,7 +58,7 @@ impl eframe::App for App {
 fn main() -> eframe::Result<()> {
     let native = eframe::NativeOptions::default();
     eframe::run_native(
-        "Tiles Lab",
+        "Tabs → Horizontal(2) / Vertical(3)",
         native,
         Box::new(|_cc| Ok(Box::new(App::new()))),
     )
