@@ -11,7 +11,18 @@ struct MyBehavior;
 
 impl Behavior<Pane> for MyBehavior {
     fn pane_ui(&mut self, ui: &mut egui::Ui, _id: TileId, pane: &mut Pane) -> UiResponse {
-        ui.heading(&pane.title);
+        // Editable field for the title
+        ui.horizontal(|ui| {
+            //ui.label("Title:");
+            let _ = ui.add(
+                egui::TextEdit::singleline(&mut pane.title)
+                    .hint_text("Enter a title...")
+                    .desired_width(200.0),
+            );
+        });
+        ui.separator();
+
+        // (You can add the main pane content here)
         UiResponse::None
     }
 
