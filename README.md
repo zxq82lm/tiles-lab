@@ -21,3 +21,26 @@ Tabs
 ├── Pane: "V: Middle"
 └── Pane: "V: Bottom"
 ```
+
+## Editable Tab/Container Titles
+
+### `tiles.rs`
+- Added `container_titles: HashMap<TileId, String>`.
+- New helpers: `get_container_title`, `set_container_title`, `clear_container_title`, `container_title_or_default`.
+- Updated `gc_root` to prune unused titles.
+- Updated `simplify` to keep containers with custom titles.
+- Added `move_container_title_if_any` to transfer custom titles when merging linear containers (untested edge case).
+
+### `behavior.rs`
+- `tab_title_for_tile`: now calls `tab_title_for_container` for containers.
+- Added `tab_title_for_container`.
+- Added `set_container_title`.
+- Extended `tab_ui`: double-click to enter rename mode, inline edit with `TextEdit`, commit on Enter/blur, empty clears.
+
+## Install
+```
+~/workspace/
+├─ egui_tiles/ fork, checkout branch `feat/editable-container-titles`
+└─ tiles-lab/ # this project
+```
+- Branch [feat/editable-container-titles](https://github.com/zxq82lm/egui_tiles/tree/feat/editable-container-titles)
