@@ -6,5 +6,6 @@ edition = "2021"
 [dependencies]
 eframe = "0.32"
 egui   = "0.32"
-egui_tiles = { path = "../../egui_tiles" }   # <= local fork
-#egui_tiles = "0.13"
+egui_tiles = { path = "../../egui_tiles" }
+log = "0.4"
+env_logger = "0.11"
