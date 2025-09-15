@@ -41,6 +41,6 @@ Tabs
 ```
 ~/workspace/
 ├─ egui_tiles/ fork, checkout branch `feat/editable-container-titles`
-└─ tiles-lab/ # this project
+└─ tiles-lab/ this project
 ```
 - Branch [feat/editable-container-titles](https://github.com/zxq82lm/egui_tiles/tree/feat/editable-container-titles)
