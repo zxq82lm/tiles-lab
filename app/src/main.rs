@@ -17,14 +17,11 @@ struct Pane {
     title: String,
 }
 
-// Minimal behavior: we only customize pane UI and pane tab title.
-// Container (tab/linear) titles are left to egui_tiles' default rendering.
 #[derive(Default)]
 struct MyBehavior;
 
 impl Behavior<Pane> for MyBehavior {
-    // Draw the pane's content. Here we expose a single-line text box
-    // that edits the pane title live.
+
     fn pane_ui(&mut self, ui: &mut egui::Ui, _id: TileId, pane: &mut Pane) -> UiResponse {
         ui.horizontal(|ui| {
             let _ = ui.add(
@@ -79,8 +76,6 @@ impl App {
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            // Render the tiles with our behavior. Pane titles are editable;
-            // container tabs keep the default titles (e.g. "Horizontal", "Vertical").
             self.tree.ui(&mut self.behavior, ui);
         });
     }
